@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasaporte de Networking 2026</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .passport-container {
+            max-width: 500px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #1a365d;
+            margin-bottom: 5px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #718096;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .progress-bar {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            position: relative;
+            margin-bottom: 30px;
+            height: 20px;
+            width: 100%;
+        }
+        .progress {
+            background-color: #319795;
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .company-card {
+            background: #edf2f7;
+            border-left: 5px solid #cbd5e0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .company-card.stamped {
+            border-left-color: #38a169;
+            background: #f0fff4;
+        }
+        .company-info h3 {
+            margin: 0 0 5px 0;
+            color: #2d3748;
+        }
+        .stamp-badge {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .badge-empty {
+            background-color: #e2e8f0;
+            color: #4a5568;
+            cursor: pointer;
+        }
+        .badge-stamped {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+        .reset-btn {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            cursor: pointer;
+            text-decoration: underline;
+            display: block;
+            margin: 20px auto 0 auto;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="passport-container">
+    <h1>Mi Pasaporte de Ruta</h1>
+    <p class="subtitle">Visita los stands, solicita tu sello y completa el recorrido.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+    </div>
+
+    <div id="route-container">
+        </div>
+
+    <button class="reset-btn" onclick="resetPassport()">Reiniciar Pasaporte</button>
+</div>
+
+<script>
+    // Configuración de la ruta de empresas
+    const companies = [
+        { id: 1, name: "Empresa Alianza Estratégica", stand: "Stand 01" },
+        { id: 2, name: "Innovación Digital Co.", stand: "Stand 02" },
+        { id: 3, name: "Desarrollo Sostenible S.A.", stand: "Stand 03" },
+        { id: 4, name: "Talento Global S.A.S.", stand: "Stand 04" }
+    ];
+
+    // Código genérico para sellar (puedes personalizar uno por empresa si lo deseas)
+    const SECRET_PIN = "1234"; 
+
+    // Cargar progreso del almacenamiento local
+    let stampedCompanies = JSON.parse(localStorage.getItem('stampedCompanies')) || [];
+
+    function renderPassport() {
+        const container = document.getElementById('route-container');
+        container.innerHTML = '';
+        
+        companies.forEach(company => {
+            const isStamped = stampedCompanies.includes(company.id);
+            
+            const card = document.createElement('div');
+            card.className = `company-card ${isStamped ? 'stamped' : ''}`;
+            
+            card.innerHTML = `
+                <div class="company-info">
+                    <h3>${company.name}</h3>
+                    <small style="color: #718096;">${company.stand}</small>
+                </div>
+                <div>
+                    ${isStamped 
+                        ? `<span class="stamp-badge badge-stamped">✓ Sellado</span>` 
+                        : `<span class="stamp-badge badge-empty" onclick="askForStamp(${company.id})">Sellar</span>`
+                    }
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        updateProgress();
+    }
+
+    function askForStamp(companyId) {
+        const pin = prompt("Ingrese el código de validación de la empresa:");
+        if (pin === SECRET_PIN) {
+            if (!stampedCompanies.includes(companyId)) {
+                stampedCompanies.push(companyId);
+                localStorage.setItem('stampedCompanies', JSON.stringify(stampedCompanies));
+                renderPassport();
+            }
+        } else if (pin !== null) {
+            alert("Código incorrecto. Solicita el código correcto al encargado del stand.");
+        }
+    }
+
+    function updateProgress() {
+        const percent = (stampedCompanies.length / companies.length) * 100;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    function resetPassport() {
+        if (confirm("¿Seguro que deseas borrar todos tus sellos?")) {
+            stampedCompanies = [];
+            localStorage.removeItem('stampedCompanies');
+            renderPassport();
+        }
+    }
+
+    // Inicializar la vista
+    renderPassport();
+</script>
+
+</body>
+</html>
