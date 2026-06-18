@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasaporte de Networking 2026</title>
+    <title>Pasaporte de Networking - Conexiones de Valor</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            background-color: #f7f9fa;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -19,91 +19,164 @@
             max-width: 500px;
             width: 100%;
             background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 30px;
             box-sizing: border-box;
+            border-top: 8px solid #e01a83; /* Tono magenta del evento */
         }
-        h1 {
+        .logo-container {
             text-align: center;
-            color: #1a365d;
-            margin-bottom: 5px;
+            margin-bottom: 20px;
         }
-        p.subtitle {
-            text-align: center;
-            color: #718096;
-            margin-top: 0;
+        .logo-container img {
+            max-width: 85%;
+            height: auto;
+        }
+        .user-section {
             margin-bottom: 25px;
+            background: #fcf8fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #e01a83;
         }
+        .user-section label {
+            display: block;
+            font-size: 0.85em;
+            color: #e01a83;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .user-section input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.2em;
+            color: #2d3748;
+            font-weight: 600;
+            padding: 5px 0;
+            border-bottom: 2px solid #cbd5e0;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .user-section input:focus {
+            border-bottom-color: #4ba340; /* Tono verde del logo al enfocar */
+        }
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }}
         .progress-bar {
             background-color: #e2e8f0;
             border-radius: 10px;
-            position: relative;
-            margin-bottom: 30px;
-            height: 20px;
+            height: 14px;
             width: 100%;
+            overflow: hidden;
         }
         .progress {
-            background-color: #319795;
+            background-color: #4ba340; /* Verde institucional del logo */
             height: 100%;
-            border-radius: 10px;
             width: 0%;
             transition: width 0.4s ease;
         }
         .company-card {
-            background: #edf2f7;
+            background: #f8fafc;
             border-left: 5px solid #cbd5e0;
-            padding: 15px;
+            padding: 18px 15px;
             margin-bottom: 15px;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 12px 12px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .company-card.stamped {
-            border-left-color: #38a169;
-            background: #f0fff4;
+            border-left-color: #4ba340;
+            background: #f2fbf3;
         }
         .company-info h3 {
             margin: 0 0 5px 0;
-            color: #2d3748;
+            color: #1a202c;
+            font-size: 1.05em;
+        }
+        .company-info small {
+            background: #edf2f7;
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: #4a5568;
+            font-weight: 500;
         }
         .stamp-badge {
             font-weight: bold;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
         }
         .badge-empty {
-            background-color: #e2e8f0;
-            color: #4a5568;
+            background-color: #e01a83;
+            color: white;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(224, 26, 131, 0.2);
+        }
+        .badge-empty:hover {
+            background-color: #b81268;
+            transform: translateY(-1px);
         }
         .badge-stamped {
-            background-color: #c6f6d5;
-            color: #22543d;
+            background-color: #4ba340;
+            color: white;
+            box-shadow: 0 4px 10px rgba(75, 163, 64, 0.2);
         }
         .reset-btn {
             background: none;
             border: none;
-            color: #e53e3e;
+            color: #a0aec0;
             cursor: pointer;
             text-decoration: underline;
             display: block;
-            margin: 20px auto 0 auto;
+            margin: 25px auto 0 auto;
             font-size: 0.85em;
+            transition: color 0.2s;
+        }
+        .reset-btn:hover {
+            color: #e53e3e;
         }
     </style>
 </head>
 <body>
 
 <div class="passport-container">
-    <h1>Mi Pasaporte de Ruta</h1>
-    <p class="subtitle">Visita los stands, solicita tu sello y completa el recorrido.</p>
+    <div class="logo-container">
+        <img src="logo.png" alt="Conexiones de Valor">
+    </div>
     
-    <div class="progress-bar">
-        <div class="progress" id="progressBar"></div>
+    <div class="user-section">
+        <label for="attendee-name">Nombre del Portador</label>
+        <input type="text" id="attendee-name" placeholder="Escribe tu nombre aquí..." oninput="saveName()">
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Progreso de tu ruta</span>
+            <span id="progress-text">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
     </div>
 
     <div id="route-container">
@@ -113,19 +186,25 @@
 </div>
 
 <script>
-    // Configuración de la ruta de empresas
+    // Configuración de la ruta de empresas (Puedes cambiar estos nombres aquí mismo)
     const companies = [
-        { id: 1, name: "Empresa Alianza Estratégica", stand: "Stand 01" },
-        { id: 2, name: "Innovación Digital Co.", stand: "Stand 02" },
-        { id: 3, name: "Desarrollo Sostenible S.A.", stand: "Stand 03" },
-        { id: 4, name: "Talento Global S.A.S.", stand: "Stand 04" }
+        { id: 1, name: "Fundación Universitaria del Áreandina", stand: "Stand 01" },
+        { id: 2, name: "Universidad Sergio Arboleda", stand: "Stand 02" },
+        { id: 3, name: "POLI", stand: "Stand 03" },
+        { id: 4, name: "Juan N. Corpas", stand: "Stand 04" }
     ];
 
-    // Código genérico para sellar (puedes personalizar uno por empresa si lo deseas)
-    const SECRET_PIN = "1234"; 
+    const SECRET_PIN = "1234"; // Pin único para validar la visita
 
-    // Cargar progreso del almacenamiento local
     let stampedCompanies = JSON.parse(localStorage.getItem('stampedCompanies')) || [];
+
+    // Carga el nombre si ya fue ingresado previamente
+    document.getElementById('attendee-name').value = localStorage.getItem('attendeeName') || '';
+
+    function saveName() {
+        const name = document.getElementById('attendee-name').value;
+        localStorage.setItem('attendeeName', name);
+    }
 
     function renderPassport() {
         const container = document.getElementById('route-container');
@@ -140,7 +219,7 @@
             card.innerHTML = `
                 <div class="company-info">
                     <h3>${company.name}</h3>
-                    <small style="color: #718096;">${company.stand}</small>
+                    <small>${company.stand}</small>
                 </div>
                 <div>
                     ${isStamped 
@@ -169,8 +248,9 @@
     }
 
     function updateProgress() {
-        const percent = (stampedCompanies.length / companies.length) * 100;
+        const percent = Math.round((stampedCompanies.length / companies.length) * 100);
         document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('progress-text').innerText = `${percent}%`;
     }
 
     function resetPassport() {
@@ -181,7 +261,6 @@
         }
     }
 
-    // Inicializar la vista
     renderPassport();
 </script>
 
