@@ -23,15 +23,25 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             padding: 30px;
             box-sizing: border-box;
-            border-top: 8px solid #e01a83; /* Tono magenta del evento */
+            border-top: 8px solid #e01a83;
         }
         .logo-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
         .logo-container img {
             max-width: 85%;
             height: auto;
+        }
+        .passport-title {
+            text-align: center;
+            color: #e01a83;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         .user-section {
             margin-bottom: 25px;
@@ -63,7 +73,7 @@
             transition: border-color 0.3s;
         }
         .user-section input:focus {
-            border-bottom-color: #4ba340; /* Tono verde del logo al enfocar */
+            border-bottom-color: #4ba340;
         }
         .progress-container {
             margin-bottom: 30px;
@@ -75,7 +85,7 @@
             font-weight: bold;
             color: #4a5568;
             margin-bottom: 8px;
-        }}
+        }
         .progress-bar {
             background-color: #e2e8f0;
             border-radius: 10px;
@@ -84,7 +94,7 @@
             overflow: hidden;
         }
         .progress {
-            background-color: #4ba340; /* Verde institucional del logo */
+            background-color: #4ba340;
             height: 100%;
             width: 0%;
             transition: width 0.4s ease;
@@ -141,6 +151,12 @@
             color: white;
             box-shadow: 0 4px 10px rgba(75, 163, 64, 0.2);
         }
+        .sync-status {
+            text-align: center;
+            font-size: 0.8em;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
         .reset-btn {
             background: none;
             border: none;
@@ -164,9 +180,11 @@
         <img src="logo.png" alt="Conexiones de Valor">
     </div>
     
+    <div class="passport-title">Pasaporte Conexiones de Valor</div>
+    
     <div class="user-section">
         <label for="attendee-name">Nombre del Portador</label>
-        <input type="text" id="attendee-name" placeholder="Escribe tu nombre aquí..." oninput="saveName()">
+        <input type="text" id="attendee-name" placeholder="Escribe tu nombre aquí..." onchange="saveName()">
     </div>
     
     <div class="progress-container">
@@ -182,28 +200,36 @@
     <div id="route-container">
         </div>
 
+    <div class="sync-status" id="syncStatus">Conectado a la ruta oficial</div>
     <button class="reset-btn" onclick="resetPassport()">Reiniciar Pasaporte</button>
 </div>
 
 <script>
-    // Configuración de la ruta de empresas (Puedes cambiar estos nombres aquí mismo)
+    // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ENTRE LAS COMILLAS
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKLapmRoOlSFFwgmrBVLG_BKE7ETE9cCcbLhZSoGzYHn_PS2qRZ0mRR_pI0uWKfgZ6/exec";
+
     const companies = [
-        { id: 1, name: "Fundación Universitaria del Áreandina", stand: "Stand 01" },
-        { id: 2, name: "Universidad Sergio Arboleda", stand: "Stand 02" },
-        { id: 3, name: "POLI", stand: "Stand 03" },
-        { id: 4, name: "Juan N. Corpas", stand: "Stand 04" }
+        { id: 1, name: "Empresa Alianza Estratégica", stand: "Stand 01" },
+        { id: 2, name: "Innovación Digital Co.", stand: "Stand 02" },
+        { id: 3, name: "Desarrollo Sostenible S.A.", stand: "Stand 03" },
+        { id: 4, name: "Talento Global S.A.S.", stand: "Stand 04" }
     ];
 
-    const SECRET_PIN = "1234"; // Pin único para validar la visita
+    const SECRET_PIN = "1234"; 
+
+    // Generar un identificador único para el teléfono de este asistente si no tiene uno
+    if (!localStorage.getItem('passport_user_id')) {
+        localStorage.setItem('passport_user_id', 'USER-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+    }
+    const USER_ID = localStorage.getItem('passport_user_id');
 
     let stampedCompanies = JSON.parse(localStorage.getItem('stampedCompanies')) || [];
-
-    // Carga el nombre si ya fue ingresado previamente
     document.getElementById('attendee-name').value = localStorage.getItem('attendeeName') || '';
 
     function saveName() {
         const name = document.getElementById('attendee-name').value;
         localStorage.setItem('attendeeName', name);
+        syncDataWithCloud();
     }
 
     function renderPassport() {
@@ -241,6 +267,7 @@
                 stampedCompanies.push(companyId);
                 localStorage.setItem('stampedCompanies', JSON.stringify(stampedCompanies));
                 renderPassport();
+                syncDataWithCloud();
             }
         } else if (pin !== null) {
             alert("Código incorrecto. Solicita el código correcto al encargado del stand.");
@@ -253,15 +280,51 @@
         document.getElementById('progress-text').innerText = `${percent}%`;
     }
 
+    // Función mágica que envía los datos a tu Google Sheet en tiempo real
+    function syncDataWithCloud() {
+        if (!WEB_APP_URL || WEB_APP_URL.includes("AQUI")) return;
+        
+        const name = localStorage.getItem('attendeeName') || 'Anónimo';
+        
+        // Obtener los nombres de las empresas que ya selló
+        const stampedNames = companies
+            .filter(c => stampedCompanies.includes(c.id))
+            .map(c => c.name)
+            .join(", ");
+
+        document.getElementById('syncStatus').innerText = "Sincronizando progreso...";
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: USER_ID,
+                name: name,
+                stamps: stampedNames || "Ninguno todavía"
+            })
+        }).then(() => {
+            document.getElementById('syncStatus').innerText = "✓ Progreso guardado en la nube";
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('syncStatus').innerText = "Modo offline (Guardado local)";
+        });
+    }
+
     function resetPassport() {
         if (confirm("¿Seguro que deseas borrar todos tus sellos?")) {
             stampedCompanies = [];
             localStorage.removeItem('stampedCompanies');
             renderPassport();
+            syncDataWithCloud();
         }
     }
 
     renderPassport();
+    // Forzar una sincronización inicial por si ya tenía datos guardados localmente
+    if(localStorage.getItem('attendeeName')) { syncDataWithCloud(); }
 </script>
 
 </body>
